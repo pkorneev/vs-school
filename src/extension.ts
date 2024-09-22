@@ -1,26 +1,38 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { AppProvider } from "./AppProvider";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand("vs-school.helloWorld", () => {
+      AppProvider.createOrShow(context.extensionUri);
+    })
+  );
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vs-school" is now active!');
+  context.subscriptions.push(
+    vscode.commands.registerCommand("vs-school.askQuestion", async () => {
+      const answer = await vscode.window.showInformationMessage(
+        "How was your day today?",
+        "good",
+        "bad"
+      );
+      if (answer === "bad") {
+        vscode.window.showInformationMessage("Sorry to hear that!");
+      }
+      if (answer === "good") {
+        vscode.window.showInformationMessage("That is great!");
+      }
+    })
+  );
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('vs-school.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from VS-School!');
-	});
-
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    vscode.commands.registerCommand("vs-school.refresh", () => {
+      AppProvider.kill();
+      AppProvider.createOrShow(context.extensionUri);
+      setTimeout(() => {
+        vscode.commands.executeCommand(
+          "workbench.action.webview.openDeveloperTools"
+        );
+      }, 500);
+    })
+  );
 }
-
-// This method is called when your extension is deactivated
-export function deactivate() {}
