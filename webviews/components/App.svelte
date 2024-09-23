@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    
 </script>
 
-<h1>HELLO FROM SVELTE AGAIN3</h1>
+<h1>HELLO FROM SVELTE AGAIN2</h1>
