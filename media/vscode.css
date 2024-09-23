@@ -1,5 +1,5 @@
 :root {
-  --container-padding: 20px;
+  --container-paddding: 20px;
   --input-padding-vertical: 6px;
   --input-padding-horizontal: 4px;
   --input-margin-vertical: 4px;
@@ -7,7 +7,7 @@
 }
 
 body {
-  padding: 0 var(--container-padding);
+  padding: 0 var(--container-paddding);
   color: var(--vscode-foreground);
   font-size: var(--vscode-font-size);
   font-weight: var(--vscode-font-weight);
@@ -17,7 +17,7 @@ body {
 
 ol,
 ul {
-  padding-left: var(--container-padding);
+  padding-left: var(--container-paddding);
 }
 
 body > *,

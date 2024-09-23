@@ -1,5 +1,5 @@
 <script lang="ts">
-    console.log('abracadabra');
+    
 </script>
 
 <style>
@@ -8,4 +8,4 @@
     }
 </style>
 
-<h1>SVELTE SIDEBAR</h1>
+<h1>Svelte sidebar</h1>
