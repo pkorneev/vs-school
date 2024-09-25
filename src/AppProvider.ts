@@ -133,10 +133,10 @@ export class AppProvider {
     );
 
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Sidebar.js")
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/App.js")
     );
     const styleMainUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Sidebar.css")
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/App.css")
     );
 
     // Use a nonce to only allow specific scripts to be run
@@ -156,6 +156,7 @@ export class AppProvider {
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <script nonce="${nonce}">
+          const tsvscode = acquireVsCodeApi();
         </script>
 			</head>
             <body>
