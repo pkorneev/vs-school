@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("vs-school.authenticate", () => {
       try {
-        authenticate();
+        authenticate(() => {});
       } catch (err) {
         console.log(err);
       }
