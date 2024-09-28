@@ -11,6 +11,7 @@
   ],
   "activationEvents": [
     "onCommand:vs-school.refresh",
+    "onCommand:vs-school.authenticate",
     "onView:vs-school-sidebar"
   ],
   "main": "./dist/extension.js",
@@ -40,6 +41,11 @@
         "command": "vs-school.refresh",
         "category": "VS-School",
         "title": "Refresh"
+      },
+      {
+        "command": "vs-school.authenticate",
+        "category": "VS-School",
+        "title": "Authenticate"
       }
     ]
   },
