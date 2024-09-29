@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { apiBaseUrl } from "./constants";
+import { apiBaseUrl } from "./helpers/constants";
 import * as polka from "polka";
 import { TokenManager } from "./TokenManager";
 

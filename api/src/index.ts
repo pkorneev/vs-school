@@ -14,7 +14,6 @@ const main = async () => {
   const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
-    port: 5432,
     database: "vsschool",
     username: "postgres",
     password: "postgress",
@@ -109,7 +108,7 @@ const main = async () => {
   });
 
   app.get("/", (_req, res) => {
-    res.send("dqwqwdqwddqwqwddqw");
+    res.send("localhost:3003 backend");
   });
 
   app.listen(3003, () => {

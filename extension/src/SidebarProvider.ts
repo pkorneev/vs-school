@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
-import { getNonce } from "./getNonce";
-import { apiBaseUrl } from "./constants";
+import { getNonce } from "./helpers/getNonce";
+import { apiBaseUrl } from "./helpers/constants";
 import { TokenManager } from "./TokenManager";
 import { authenticate } from "./authenticate";
 

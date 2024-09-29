@@ -29,8 +29,9 @@
 {#if loading}
   <div>loading...</div>
 {:else if user}
-  <pre>{JSON.stringify(user, null, 2)}</pre>
+  <h2>{user.name}</h2>
   <button
+    class="logout-btn"
     on:click={() => {
       accessToken = "";
       user = null;
@@ -38,14 +39,18 @@
     }}>Logout</button
   >
 {:else}
-  <div>no user is logged in</div>
   <button
+    class="login-btn"
     on:click={() => {
-      console.log("clicked");
       tsvscode.postMessage({ type: "authenticate", value: undefined });
     }}>Login with Google</button
   >
 {/if}
 
 <style>
+  .logout-btn,
+  .login-btn {
+    margin-top: 1rem;
+    max-width: 200px;
+  }
 </style>
