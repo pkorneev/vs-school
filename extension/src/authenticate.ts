@@ -16,7 +16,30 @@ export const authenticate = (fn: () => void) => {
     await TokenManager.setToken(token);
     fn();
 
-    res.end(`<h1>Auth was successful, you can close this now</h1>`);
+    res.end(`
+      <html>
+        <head>
+          <style>
+            body {
+              background-color: #1e1e1e;/
+              color: #d4d4d4;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              margin: 0;
+            }
+            h1 {
+              color: #569cd6;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Auth was successful, you can close this now</h1>
+        </body>
+      </html>
+    `);
     (app as any).server.close();
   });
 
