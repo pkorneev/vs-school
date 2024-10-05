@@ -73,16 +73,19 @@
     Logout
   </button>
 
+  <h2>All lessons:</h2>
+
   <!-- Show fetched lessons -->
   {#if lessons.length > 0}
     <ul>
       {#each lessons as lesson}
-        <li>{lesson.id} {lesson.title}</li>
-        <ul>
-          {#each lesson.files as file}
-            <li>{file.name}</li>
-          {/each}
-        </ul>
+        <li class="lesson-elem">
+          <div>
+            {lesson.id}:
+            {lesson.title}
+          </div>
+          <button class="open-file-button">Open</button>
+        </li>
       {/each}
     </ul>
   {:else}
@@ -101,9 +104,24 @@
 {/if}
 
 <style>
+  h1,
+  h2,
+  button {
+    user-select: none;
+  }
   .logout-btn,
   .login-btn {
     margin-top: 1rem;
     max-width: 200px;
+  }
+  .open-file-button {
+    width: fit-content;
+    padding: 0.5rem 1rem;
+  }
+  .lesson-elem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
   }
 </style>
