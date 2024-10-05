@@ -12,6 +12,7 @@
   "activationEvents": [
     "onCommand:vs-school.refresh",
     "onCommand:vs-school.authenticate",
+    "onCommand:vs-school.createFiles",
     "onView:vs-school-sidebar"
   ],
   "main": "./dist/extension.js",
@@ -46,6 +47,11 @@
         "command": "vs-school.authenticate",
         "category": "VS-School",
         "title": "Authenticate"
+      },
+      {
+        "command": "vs-school.createFiles",
+        "category": "VS-School",
+        "title": "Create Files"
       }
     ]
   },

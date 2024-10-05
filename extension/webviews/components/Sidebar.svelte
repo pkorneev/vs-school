@@ -84,7 +84,12 @@
             {lesson.id}:
             {lesson.title}
           </div>
-          <button class="open-file-button">Open</button>
+          <button
+            class="open-file-button"
+            on:click={() => {
+              tsvscode.postMessage({ type: "open-lesson", value: lesson });
+            }}>Open</button
+          >
         </li>
       {/each}
     </ul>

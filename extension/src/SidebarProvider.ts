@@ -43,6 +43,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             type: "token",
             value: TokenManager.getToken(),
           });
+          break;
+        }
+        case "open-lesson": {
+          vscode.commands.executeCommand("vs-school.createFiles", data.value);
+          break;
         }
         case "onInfo": {
           if (!data.value) {

@@ -1,4 +1,7 @@
 import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
 import { SidebarProvider } from "./SidebarProvider";
 import { AppProvider } from "./AppProvider";
 import { authenticate } from "./authenticate";
@@ -44,6 +47,52 @@ export function activate(context: vscode.ExtensionContext) {
       }, 500);
     })
   );
+
+  const disposable = vscode.commands.registerCommand(
+    "vs-school.createFiles",
+    async (lessonFiles) => {
+      // Create a temporary directory
+      const tmpDir = path.join(os.tmpdir(), `lesson-${lessonFiles.id}`);
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir, { recursive: true });
+      }
+
+      // Write files to the temporary directory
+      lessonFiles.files.forEach((file: any) => {
+        const filePath = path.join(tmpDir, file.path);
+        const dirPath = path.dirname(filePath);
+
+        // Ensure the directory exists
+        if (!fs.existsSync(dirPath)) {
+          fs.mkdirSync(dirPath, { recursive: true });
+        }
+
+        // Write the file content
+        fs.writeFileSync(filePath, file.content);
+      });
+
+      // Add the temporary directory to the workspace
+      vscode.workspace.updateWorkspaceFolders(
+        vscode.workspace.workspaceFolders
+          ? vscode.workspace.workspaceFolders.length
+          : 0,
+        null,
+        { uri: vscode.Uri.file(tmpDir), name: `Lesson-${lessonFiles.id}` }
+      );
+
+      // Open the first file in the editor
+      const firstFilePath = path.join(tmpDir, lessonFiles.files[0].path);
+      const document = await vscode.workspace.openTextDocument(firstFilePath);
+      vscode.window.showTextDocument(document);
+
+      // Show a success message
+      vscode.window.showInformationMessage(
+        `Temporary lesson files created at ${tmpDir}`
+      );
+    }
+  );
+
+  context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated
