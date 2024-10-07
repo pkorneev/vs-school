@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Lessons, User } from "../types";
+  import Footer from "./Footer.svelte";
 
   let loading = true;
   let user: User | null = null;
@@ -53,49 +54,47 @@
       console.error("Failed to fetch lessons", error);
     }
   }
+
+  const onLogout = () => {
+    accessToken = "";
+    user = null;
+    lessons = [];
+    tsvscode.postMessage({ type: "logout", value: undefined });
+  };
 </script>
 
 {#if loading}
   <div>Loading...</div>
 {:else if user}
-  <h2>{user.name}</h2>
+  <div class="sidebar-container">
+    <div class="sidebar-content">
+      <h2 class="section-title">All lessons</h2>
 
-  <!-- Logout button -->
-  <button
-    class="logout-btn"
-    on:click={() => {
-      accessToken = "";
-      user = null;
-      lessons = []; // Clear lessons on logout
-      tsvscode.postMessage({ type: "logout", value: undefined });
-    }}
-  >
-    Logout
-  </button>
+      <!-- Show fetched lessons -->
+      {#if lessons.length > 0}
+        <ul>
+          {#each lessons as lesson}
+            <li class="lesson-elem">
+              <div>
+                {lesson.id}:
+                {lesson.title}
+              </div>
+              <button
+                class="open-file-button"
+                on:click={() => {
+                  tsvscode.postMessage({ type: "open-lesson", value: lesson });
+                }}>Open</button
+              >
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p>No lessons available</p>
+      {/if}
+    </div>
 
-  <h2>All lessons:</h2>
-
-  <!-- Show fetched lessons -->
-  {#if lessons.length > 0}
-    <ul>
-      {#each lessons as lesson}
-        <li class="lesson-elem">
-          <div>
-            {lesson.id}:
-            {lesson.title}
-          </div>
-          <button
-            class="open-file-button"
-            on:click={() => {
-              tsvscode.postMessage({ type: "open-lesson", value: lesson });
-            }}>Open</button
-          >
-        </li>
-      {/each}
-    </ul>
-  {:else}
-    <p>No lessons available</p>
-  {/if}
+    <Footer name={user.name} {onLogout} />
+  </div>
 {:else}
   <!-- Login button -->
   <button
@@ -114,7 +113,6 @@
   button {
     user-select: none;
   }
-  .logout-btn,
   .login-btn {
     margin-top: 1rem;
     max-width: 200px;
@@ -128,5 +126,17 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
+  }
+  .sidebar-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .sidebar-container > *:not(footer) {
+    flex: 1;
+  }
+  .section-title {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid gray;
   }
 </style>

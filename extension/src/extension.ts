@@ -3,7 +3,6 @@ import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
 import { SidebarProvider } from "./SidebarProvider";
-import { AppProvider } from "./AppProvider";
 import { authenticate } from "./authenticate";
 import { TokenManager } from "./TokenManager";
 
@@ -35,8 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
       await vscode.commands.executeCommand(
         "workbench.view.extension.vs-school-sidebar-view"
       );
-      AppProvider.kill();
-      AppProvider.createOrShow(context.extensionUri);
+
       vscode.window.showInformationMessage(
         "token values is: " + TokenManager.getToken()
       );
@@ -48,7 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  const disposable = vscode.commands.registerCommand(
+  const filesCreator = vscode.commands.registerCommand(
     "vs-school.createFiles",
     async (lessonFiles) => {
       // Create a temporary directory
@@ -92,7 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(filesCreator);
 }
 
 // this method is called when your extension is deactivated
