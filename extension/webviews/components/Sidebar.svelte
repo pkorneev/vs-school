@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import type { Lessons, User } from "../types";
   import Footer from "./Footer.svelte";
+  import Login from "./Login.svelte";
 
   let loading = true;
   let user: User | null = null;
@@ -61,6 +62,10 @@
     lessons = [];
     tsvscode.postMessage({ type: "logout", value: undefined });
   };
+
+  const onLogin = () => {
+    tsvscode.postMessage({ type: "authenticate", value: undefined });
+  };
 </script>
 
 {#if loading}
@@ -96,15 +101,7 @@
     <Footer name={user.name} {onLogout} />
   </div>
 {:else}
-  <!-- Login button -->
-  <button
-    class="login-btn"
-    on:click={() => {
-      tsvscode.postMessage({ type: "authenticate", value: undefined });
-    }}
-  >
-    Login with Google
-  </button>
+  <Login {onLogin} />
 {/if}
 
 <style>
@@ -136,6 +133,7 @@
     flex: 1;
   }
   .section-title {
+    margin-top: 1rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid gray;
   }
