@@ -20,7 +20,7 @@
     padding: 0.5rem 1rem;
   }
   .footer {
-    margin-top: auto; /* Push the footer to the bottom */
+    margin-top: auto;
     text-align: center;
     padding-bottom: 2rem;
   }
