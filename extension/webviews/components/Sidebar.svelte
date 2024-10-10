@@ -10,7 +10,7 @@
   // In the sidebar we can distinguish between opnening base task and task with progress
   // As well we can submit a sollution before deadline, after deadline we will not be able to do that and would get negative response(saving also is impossible after deadline).
   // User can open base task or his progress task(should respect deadline as well). If he opens base task and tries to safe , but has already his sollution in progress stored, inform him about it, that he can rewrite his progress and it is not
-  // want he may want to do. 
+  // want he may want to do.
 
   let loading = true;
   let user: User | null = null;
@@ -113,14 +113,9 @@
 {/if}
 
 <style>
-  h1,
   h2,
   button {
     user-select: none;
-  }
-  .login-btn {
-    margin-top: 1rem;
-    max-width: 200px;
   }
   .open-file-button {
     width: fit-content;
