@@ -7,7 +7,7 @@ export const getLessonsResponse = [
         name: "main.c",
         path: "hello.c",
         content:
-          '#include <stdio.h>\nint main() { printf("Hello, World!"); return 0; }',
+          '#include <stdio.h>\nint main() { printf("FIRST LESSON!"); return 0; }',
       },
       {
         name: "Makefile",
@@ -36,7 +36,7 @@ export const getLessonsResponse = [
         name: "main.c",
         path: "hello.c",
         content:
-          '#include <stdio.h>\nint main() { printf("Hello, Data Structures!"); return 0; }',
+          '#include <stdio.h>\nint main() { printf("SECOND LESSON!"); return 0; }',
       },
       {
         name: "Makefile",
@@ -65,7 +65,7 @@ export const getLessonsResponse = [
         name: "main.c",
         path: "hello.c",
         content:
-          '#include <stdio.h>\nint main() { printf("Hello, Data Structures!"); return 0; }',
+          '#include <stdio.h>\nint main() { printf("THIRD LESSON!"); return 0; }',
       },
       {
         name: "Makefile",
@@ -94,7 +94,7 @@ export const getLessonsResponse = [
         name: "main.c",
         path: "hello.c",
         content:
-          '#include <stdio.h>\nint main() { printf("Hello, Data Structures!"); return 0; }',
+          '#include <stdio.h>\nint main() { printf("FOURTH LESSON!"); return 0; }',
       },
       {
         name: "Makefile",

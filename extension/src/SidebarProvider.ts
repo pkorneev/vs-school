@@ -47,6 +47,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         }
         case "open-lesson": {
           vscode.commands.executeCommand("vs-school.createFiles", data.value);
+          vscode.commands.executeCommand("workbench.view.explorer");
           break;
         }
         case "onInfo": {
