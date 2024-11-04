@@ -10,12 +10,17 @@ export type File = {
   content: string;
 };
 
-
 export type Lesson = {
-  id: number; 
-  title: string; 
-  files: File[]; 
+  id: number;
+  title: string;
+  files: File[];
 };
 
+export type MyLesson = Lesson & {
+  points: number;
+  comment: string;
+};
 
 export type Lessons = Lesson[];
+
+export type MyLessons = MyLessons[];

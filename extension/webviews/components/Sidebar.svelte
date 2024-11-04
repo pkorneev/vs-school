@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Lessons, User } from "../types";
+  import type { Lessons, User, MyLessons } from "../types";
   import Footer from "./Footer.svelte";
   import Login from "./Login.svelte";
 
@@ -16,6 +16,12 @@
   let user: User | null = null;
   let accessToken = "";
   let lessons: Lessons = []; // Store fetched lessons
+  let myLessons: MyLessons = []; // Store fetched lessons
+  let expandedLesson: number | null = null;
+
+  function toggleLesson(id: number) {
+    expandedLesson = expandedLesson === id ? null : id;
+  }
 
   onMount(async () => {
     // Listen for messages from VS Code
@@ -40,6 +46,7 @@
           // Fetch lessons if the user is authenticated
           if (user) {
             fetchLessons();
+            fetchMyLessons();
           }
           break;
       }
@@ -52,15 +59,28 @@
   // Function to fetch lessons
   async function fetchLessons() {
     try {
-      const lessonsResponse = await fetch(`${apiBaseUrl}/lessons`, {
+      const lessonsResponse = await fetch(`${apiBaseUrl}/allLessons`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       });
       lessons = await lessonsResponse.json();
-      console.log(lessons);
     } catch (error) {
       console.error("Failed to fetch lessons", error);
+    }
+  }
+
+  // Function to fetch lessons
+  async function fetchMyLessons() {
+    try {
+      const lessonsResponse = await fetch(`${apiBaseUrl}/myLessons`, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      myLessons = await lessonsResponse.json();
+    } catch (error) {
+      console.error("Failed to fetch user's lessons", error);
     }
   }
 
@@ -68,6 +88,7 @@
     accessToken = "";
     user = null;
     lessons = [];
+    myLessons = [];
     tsvscode.postMessage({ type: "logout", value: undefined });
   };
 
@@ -87,17 +108,33 @@
       {#if lessons.length > 0}
         <ul>
           {#each lessons as lesson}
-            <li class="lesson-elem">
-              <div>
-                {lesson.id}:
-                {lesson.title}
+            <li class="lesson-elem" on:click={() => toggleLesson(lesson.id)}>
+              <div class="lesson-short">
+                <div>
+                  {lesson.id}: {lesson.title}
+                </div>
+                <div
+                  class="chevron {expandedLesson === lesson.id ? 'open' : ''}"
+                >
+                  >
+                </div>
               </div>
-              <button
-                class="open-file-button"
-                on:click={() => {
-                  tsvscode.postMessage({ type: "open-lesson", value: lesson });
-                }}>Open</button
-              >
+
+              {#if expandedLesson === lesson.id}
+                <div class="lesson-details">
+                  <button
+                    class="open-file-button"
+                    on:click={() => {
+                      tsvscode.postMessage({
+                        type: "open-lesson",
+                        value: lesson,
+                      });
+                    }}
+                  >
+                    Open
+                  </button>
+                </div>
+              {/if}
             </li>
           {/each}
         </ul>
@@ -114,18 +151,39 @@
 
 <style>
   h2,
-  button {
+  button,
+  .chevron {
     user-select: none;
   }
-  .open-file-button {
-    width: fit-content;
-    padding: 0.5rem 1rem;
-  }
-  .lesson-elem {
+  .lesson-short {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .lesson-elem {
+    display: flex;
+    flex-direction: column;
     margin-top: 1rem;
+    cursor: pointer;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid gray;
+  }
+
+  .chevron {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+    font-size: 1.25rem;
+    font-weight: 100;
+  }
+
+  .chevron.open {
+    transform: rotate(0deg);
+  }
+
+  .open-file-button {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 2rem;
   }
   .sidebar-container {
     display: flex;

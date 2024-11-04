@@ -9,7 +9,8 @@ import passport from "passport";
 import { User } from "./entities/User";
 import jwt from "jsonwebtoken";
 import cors from "cors";
-import { getLessonsResponse } from "./mock";
+import { getLessonsResponse } from "./mock/getAllLessons";
+import { getUserLessonsResponse } from "./mock/getUserLessons";
 
 const main = async () => {
   const AppDataSource = new DataSource({
@@ -108,7 +109,7 @@ const main = async () => {
     res.send({ user });
   });
 
-  app.get("/lessons", (req, res) => {
+  app.get("/allLessons", (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       res.send({});
@@ -130,6 +131,30 @@ const main = async () => {
     }
 
     res.json(getLessonsResponse);
+  });
+
+  app.get("/myLessons", (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      res.send({});
+      return;
+    }
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      res.send({});
+      return;
+    }
+    let userId: number | undefined;
+
+    try {
+      const payload: any = jwt.verify(token, process.env.JWT_SECRET);
+      userId = payload.userId;
+    } catch (err) {
+      res.send({});
+      return;
+    }
+
+    res.json(getUserLessonsResponse);
   });
 
   app.get("/", (_req, res) => {
