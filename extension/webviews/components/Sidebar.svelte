@@ -3,6 +3,7 @@
   import type { Lessons, User, MyLessons } from "../types";
   import Footer from "./Footer.svelte";
   import Login from "./Login.svelte";
+  import Status from "./Status.svelte";
 
   // !!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!
   // Initialize user in db with already scoped lessons from mock json( the same mock json is used for listing lessons).
@@ -18,6 +19,18 @@
   let lessons: Lessons = []; // Store fetched lessons
   let myLessons: MyLessons = []; // Store fetched lessons
   let expandedLesson: number | null = null;
+
+  // Reactive derived array
+  let combinedLessons: MyLessons = [];
+
+  $: combinedLessons = lessons.map((lesson) => {
+    const myLesson = myLessons.find((ml) => ml.id === lesson.id);
+    if (!myLesson) {
+      return { ...lesson, status: "TO_DO" };
+    } else {
+      return myLesson;
+    }
+  });
 
   function toggleLesson(id: number) {
     expandedLesson = expandedLesson === id ? null : id;
@@ -45,7 +58,7 @@
 
           // Fetch lessons if the user is authenticated
           if (user) {
-            fetchLessons();
+            fetchAllLessons();
             fetchMyLessons();
           }
           break;
@@ -56,8 +69,8 @@
     tsvscode.postMessage({ type: "get-token", value: undefined });
   });
 
-  // Function to fetch lessons
-  async function fetchLessons() {
+  // Function to fetch all lessons
+  async function fetchAllLessons() {
     try {
       const lessonsResponse = await fetch(`${apiBaseUrl}/allLessons`, {
         headers: {
@@ -105,23 +118,32 @@
       <h2 class="section-title">All lessons</h2>
 
       <!-- Show fetched lessons -->
-      {#if lessons.length > 0}
+      {#if combinedLessons.length > 0}
         <ul>
-          {#each lessons as lesson}
+          {#each combinedLessons as lesson}
             <li class="lesson-elem" on:click={() => toggleLesson(lesson.id)}>
               <div class="lesson-short">
                 <div>
                   {lesson.id}: {lesson.title}
                 </div>
-                <div
-                  class="chevron {expandedLesson === lesson.id ? 'open' : ''}"
-                >
+                <div class="status-and-chevron">
+                  {#if lesson.status === "COMPLETED"}
+                    <span class="lesson-points">{lesson.points}</span>
+                  {/if}
+                  <Status status={lesson.status} />
+                  <div
+                    class="chevron {expandedLesson === lesson.id ? 'open' : ''}"
                   >
+                    >
+                  </div>
                 </div>
               </div>
 
               {#if expandedLesson === lesson.id}
                 <div class="lesson-details">
+                  {#if lesson.status === "COMPLETED"}
+                    <p class="lesson-comment">{lesson.comment}</p>
+                  {/if}
                   <button
                     class="open-file-button"
                     on:click={() => {
@@ -159,6 +181,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none;
+  }
+  .lesson-points {
+    font-size: 1.5rem;
+    color: rgb(2, 209, 2);
+  }
+  .lesson-comment {
+    margin-top: 1rem;
+  }
+  .status-and-chevron {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
   .lesson-elem {
     display: flex;
@@ -171,7 +206,6 @@
 
   .chevron {
     transform: rotate(90deg);
-    transition: transform 0.3s ease;
     font-size: 1.25rem;
     font-weight: 100;
   }

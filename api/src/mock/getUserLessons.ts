@@ -7,6 +7,7 @@ export const getUserLessonsResponse = [
       "Good effort on this assignment. You’ve done a nice job implementing the basics, but consider optimizing your code for readability by adding more comments. \
        Also, watch out for memory leaks when working with dynamic data structures like linked lists; \
         adding free() calls for allocated memory at the end of your functions would be a good practice.",
+    status: "COMPLETED",
     files: [
       {
         name: "main.c",
@@ -41,6 +42,71 @@ export const getUserLessonsResponse = [
       "Good effort on this assignment. You’ve done a nice job implementing the basics, but consider optimizing your code for readability by adding more comments. \
        Also, watch out for memory leaks when working with dynamic data structures like linked lists; \
         adding free() calls for allocated memory at the end of your functions would be a good practice.",
+    status: "COMPLETED",
+    files: [
+      {
+        name: "main.c",
+        path: "hello.c",
+        content:
+          '#include <stdio.h>\nint main() { printf("SECOND LESSON!"); return 0; }',
+      },
+      {
+        name: "Makefile",
+        path: "Makefile",
+        content: "all: hello\nhello:\n\tgcc hello.c -o hello",
+      },
+      {
+        name: "test.sh",
+        path: ".test/firstTest/test.sh",
+        content: "#!/bin/bash\necho Data Structure Test 1",
+      },
+      { name: "rc", path: ".test/firstTest/rc", content: "exit 0" },
+      {
+        name: "test.sh",
+        path: ".test/secondTest/test.sh",
+        content: "#!/bin/bash\necho Data Structure Test 2",
+      },
+      { name: "rc", path: ".test/secondTest/rc", content: "exit 0" },
+    ],
+  },
+  {
+    id: 3,
+    title: "Pointers-and-memory",
+    points: null,
+    comment: null,
+    status: "SUBMITTED",
+    files: [
+      {
+        name: "main.c",
+        path: "hello.c",
+        content:
+          '#include <stdio.h>\nint main() { printf("SECOND LESSON!"); return 0; }',
+      },
+      {
+        name: "Makefile",
+        path: "Makefile",
+        content: "all: hello\nhello:\n\tgcc hello.c -o hello",
+      },
+      {
+        name: "test.sh",
+        path: ".test/firstTest/test.sh",
+        content: "#!/bin/bash\necho Data Structure Test 1",
+      },
+      { name: "rc", path: ".test/firstTest/rc", content: "exit 0" },
+      {
+        name: "test.sh",
+        path: ".test/secondTest/test.sh",
+        content: "#!/bin/bash\necho Data Structure Test 2",
+      },
+      { name: "rc", path: ".test/secondTest/rc", content: "exit 0" },
+    ],
+  },
+  {
+    id: 4,
+    title: "Algorithms",
+    points: null,
+    comment: null,
+    status: "IN_PROGRESS",
     files: [
       {
         name: "main.c",

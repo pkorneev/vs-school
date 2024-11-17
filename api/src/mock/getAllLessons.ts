@@ -115,4 +115,33 @@ export const getLessonsResponse = [
       { name: "rc", path: ".test/secondTest/rc", content: "exit 0" },
     ],
   },
+  {
+    id: 5,
+    title: "Recursion",
+    files: [
+      {
+        name: "main.c",
+        path: "hello.c",
+        content:
+          '#include <stdio.h>\nint main() { printf("FOURTH LESSON!"); return 0; }',
+      },
+      {
+        name: "Makefile",
+        path: "Makefile",
+        content: "all: hello\nhello:\n\tgcc hello.c -o hello",
+      },
+      {
+        name: "test.sh",
+        path: ".test/firstTest/test.sh",
+        content: "#!/bin/bash\necho Data Structure Test 1",
+      },
+      { name: "rc", path: ".test/firstTest/rc", content: "exit 0" },
+      {
+        name: "test.sh",
+        path: ".test/secondTest/test.sh",
+        content: "#!/bin/bash\necho Data Structure Test 2",
+      },
+      { name: "rc", path: ".test/secondTest/rc", content: "exit 0" },
+    ],
+  },
 ];

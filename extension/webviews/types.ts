@@ -16,11 +16,14 @@ export type Lesson = {
   files: File[];
 };
 
+export type Status = "TO_DO" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED";
+
 export type MyLesson = Lesson & {
-  points: number;
-  comment: string;
+  status?: Status;
+  points?: number;
+  comment?: string;
 };
 
 export type Lessons = Lesson[];
 
-export type MyLessons = MyLessons[];
+export type MyLessons = MyLesson[];
