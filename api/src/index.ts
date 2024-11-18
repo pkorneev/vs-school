@@ -157,6 +157,11 @@ const main = async () => {
     res.json(getUserLessonsResponse);
   });
 
+  app.post("/upload", express.json(), (req, res) => {
+    console.log("Received /upload POST request with data:", req.body);
+    res.status(200).send({ message: "Upload successful" });
+  });
+
   app.get("/", (_req, res) => {
     res.send("localhost:3003 backend");
   });

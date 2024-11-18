@@ -1,6 +1,6 @@
 // @ts-nocheck
-
-"use strict";
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+("use strict");
 
 const path = require("path");
 
@@ -23,7 +23,19 @@ const config = {
   resolve: {
     // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: [".ts", ".js"],
+    alias: {
+      // Ensure Webpack understands these modules
+      "node-fetch": "node-fetch",
+    },
+    fallback: {
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
+      stream: require.resolve("stream-browserify"),
+      buffer: require.resolve("buffer/"),
+      crypto: require.resolve("crypto-browserify"),
+    },
   },
+  plugins: [new NodePolyfillPlugin()],
   module: {
     rules: [
       {

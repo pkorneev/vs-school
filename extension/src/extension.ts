@@ -2,9 +2,11 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import fetch from "node-fetch";
 import { SidebarProvider } from "./SidebarProvider";
 import { authenticate } from "./authenticate";
 import { TokenManager } from "./TokenManager";
+import { apiBaseUrl } from "./helpers/constants";
 
 export function activate(context: vscode.ExtensionContext) {
   TokenManager.globalState = context.globalState;
@@ -89,8 +91,73 @@ export function activate(context: vscode.ExtensionContext) {
       );
     }
   );
-
   context.subscriptions.push(filesCreator);
+
+  const sendFilesCommand = vscode.commands.registerCommand(
+    "vs-school.sendFiles",
+    async () => {
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (!workspaceFolders || workspaceFolders.length === 0) {
+        vscode.window.showErrorMessage("No workspace is currently opened.");
+        return;
+      }
+
+      const folderUri = workspaceFolders[0].uri;
+      const folderPath = folderUri.fsPath;
+
+      // Collect all files in the workspace folder
+      const files = [];
+      const collectFiles = (dirPath) => {
+        const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+        entries.forEach((entry) => {
+          const fullPath = path.join(dirPath, entry.name);
+          if (entry.isDirectory()) {
+            collectFiles(fullPath);
+          } else {
+            const relativePath = path.relative(folderPath, fullPath);
+            const content = fs.readFileSync(fullPath, "utf8");
+            files.push({ path: relativePath, content });
+          }
+        });
+      };
+
+      collectFiles(folderPath);
+
+      // Send files to the server
+      try {
+        const response = await fetch(`${apiBaseUrl}/upload`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ files }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.statusText}`);
+        }
+
+        vscode.window.showInformationMessage("Files sent successfully!");
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          `Failed to send files: ${error.message}`
+        );
+      }
+    }
+  );
+
+  context.subscriptions.push(sendFilesCommand);
+
+  const createStatusBarButton = () => {
+    const statusBar = vscode.window.createStatusBarItem(
+      vscode.StatusBarAlignment.Right,
+      100
+    );
+    statusBar.text = "$(cloud-upload) Send Homework";
+    statusBar.command = "vs-school.sendFiles";
+    statusBar.tooltip = "Send all files to the server";
+    statusBar.show();
+  };
+
+  createStatusBarButton();
 }
 
 // this method is called when your extension is deactivated
