@@ -74,7 +74,7 @@ const main = async () => {
     passport.authenticate("google", { session: false }),
     (req: any, res) => {
       // Successful authentication.
-      res.redirect(`http://localhost:54321/auth/${req.user.accessToken}`);
+      res.redirect(`http://localhost:55331/auth/${req.user.accessToken}`);
     }
   );
 

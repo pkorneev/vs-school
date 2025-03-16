@@ -43,7 +43,7 @@ export const authenticate = (fn: () => void) => {
     (app as any).server.close();
   });
 
-  app.listen(54321, (err: Error) => {
+  app.listen(55331, (err: Error) => {
     if (err) {
       vscode.window.showErrorMessage(err.message);
     } else {

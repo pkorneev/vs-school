@@ -102,12 +102,32 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const folderUri = workspaceFolders[0].uri;
-      const folderPath = folderUri.fsPath;
+      // Get the active editor and its document
+      const activeEditor = vscode.window.activeTextEditor;
+      if (!activeEditor) {
+        vscode.window.showErrorMessage("No active editor found.");
+        return;
+      }
+
+      const activeFilePath = activeEditor.document.uri.fsPath;
+
+      // Find the workspace folder containing the active file
+      const currentWorkspaceFolder = workspaceFolders.find((folder) =>
+        activeFilePath.startsWith(folder.uri.fsPath)
+      );
+
+      if (!currentWorkspaceFolder) {
+        vscode.window.showErrorMessage(
+          "Could not determine the current workspace folder."
+        );
+        return;
+      }
+
+      const folderPath = currentWorkspaceFolder.uri.fsPath;
 
       // Collect all files in the workspace folder
-      const files = [];
-      const collectFiles = (dirPath) => {
+      const files: { path: string; content: string }[] = [];
+      const collectFiles = (dirPath: string) => {
         const entries = fs.readdirSync(dirPath, { withFileTypes: true });
         entries.forEach((entry) => {
           const fullPath = path.join(dirPath, entry.name);
@@ -135,8 +155,10 @@ export function activate(context: vscode.ExtensionContext) {
           throw new Error(`Server error: ${response.statusText}`);
         }
 
-        vscode.window.showInformationMessage("Files sent successfully!");
-      } catch (error) {
+        vscode.window.showInformationMessage(
+          `Files from ${currentWorkspaceFolder.name} sent successfully!`
+        );
+      } catch (error: any) {
         vscode.window.showErrorMessage(
           `Failed to send files: ${error.message}`
         );
