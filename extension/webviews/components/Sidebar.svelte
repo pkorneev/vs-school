@@ -36,36 +36,42 @@
     expandedLesson = expandedLesson === id ? null : id;
   }
 
+  function resetAuthState() {
+    accessToken = "";
+    user = null;
+    loading = false; // Ensures login button is displayed
+  }
+
   onMount(async () => {
-    // Listen for messages from VS Code
     window.addEventListener("message", async (e) => {
       const message = e.data;
 
       switch (message.type) {
         case "token":
-          // Store the access token
-          accessToken = message.value;
+          try {
+            accessToken = message.value;
+            const response = await fetch(`${apiBaseUrl}/me`, {
+              headers: { authorization: `Bearer ${accessToken}` },
+            });
 
-          // Fetch the user details
-          const response = await fetch(`${apiBaseUrl}/me`, {
-            headers: {
-              authorization: `Bearer ${accessToken}`,
-            },
-          });
-          const data = await response.json();
-          user = data.user;
-          loading = false;
+            if (!response.ok) throw new Error("Failed to authenticate");
 
-          // Fetch lessons if the user is authenticated
-          if (user) {
-            fetchAllLessons();
-            fetchMyLessons();
+            const data = await response.json();
+            user = data.user;
+            loading = false;
+
+            if (user) {
+              fetchAllLessons();
+              fetchMyLessons();
+            }
+          } catch (error) {
+            console.error("Authentication failed:", error);
+            resetAuthState();
           }
           break;
       }
     });
 
-    // Request the token from VS Code
     tsvscode.postMessage({ type: "get-token", value: undefined });
   });
 

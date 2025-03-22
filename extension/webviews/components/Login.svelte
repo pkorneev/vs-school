@@ -5,7 +5,7 @@
 <div class="login-container">
   <h1>Log in</h1>
   <h3>Welcome to VS-School</h3>
-  <button on:click={onLogin}>Continue with Google</button>
+  <button on:click={onLogin}>Continue with VUT</button>
 </div>
 
 <style>

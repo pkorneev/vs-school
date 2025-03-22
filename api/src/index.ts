@@ -4,13 +4,19 @@ import express from "express";
 import { DataSource } from "typeorm";
 import { __prod__ } from "./const";
 import { join } from "path";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import OAuth2Strategy from "passport-oauth2";
 import passport from "passport";
 import { User } from "./entities/User";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import { getLessonsResponse } from "./mock/getAllLessons";
 import { getUserLessonsResponse } from "./mock/getUserLessons";
+
+const AUTH_BASE_URL = process.env.AUTH_BASE_URL!;
+const CLIENT_ID = process.env.CLIENT_ID!;
+const CLIENT_SECRET = process.env.CLIENT_SECRET!;
+const CALLBACK_URL = process.env.CALLBACK_URL!;
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 const main = async () => {
   const AppDataSource = new DataSource({
@@ -36,44 +42,54 @@ const main = async () => {
   app.use(passport.initialize());
 
   passport.use(
-    new GoogleStrategy(
+    new OAuth2Strategy(
       {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:3003/auth/google/callback",
+        authorizationURL: `${AUTH_BASE_URL}/authorize/`,
+        tokenURL: `${AUTH_BASE_URL}/token/`,
+        clientID: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        callbackURL: CALLBACK_URL,
       },
-      async (_accessToken, _refreshToken, profile, cb) => {
-        let user = await User.findOne({ where: { googleId: profile.id } });
-
-        if (user) {
-          user.name = profile.displayName;
-          await user.save();
-        } else {
-          user = await User.create({
+      async (accessToken, _refreshToken, profile, cb) => {
+        try {
+          const userInfo = {
+            sub: profile.id,
             name: profile.displayName,
-            googleId: profile.id,
-          }).save();
-        }
+            email: profile.emails?.[0]?.value,
+          };
 
-        cb(null, {
-          accessToken: jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-            expiresIn: "1y",
-          }),
-        });
+          let user = await User.findOne({
+            where: { universityId: userInfo.sub },
+          });
+
+          if (user) {
+            user.name = profile.displayName;
+            await user.save();
+          } else {
+            user = await User.create({
+              name: profile.displayName,
+              googleId: profile.id,
+            }).save();
+          }
+
+          cb(null, {
+            accessToken: jwt.sign({ userId: user.id }, JWT_SECRET, {
+              expiresIn: "1y",
+            }),
+          });
+        } catch (error) {
+          cb(error);
+        }
       }
     )
   );
 
-  app.get(
-    "/auth/google",
-    passport.authenticate("google", { scope: ["profile"], session: false })
-  );
+  app.get("/auth/university", passport.authenticate("oauth2"));
 
   app.get(
-    "/auth/google/callback",
-    passport.authenticate("google", { session: false }),
+    "/auth/university/callback",
+    passport.authenticate("oauth2", { session: false }),
     (req: any, res) => {
-      // Successful authentication.
       res.redirect(`http://localhost:55331/auth/${req.user.accessToken}`);
     }
   );

@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
-import { apiBaseUrl } from "./helpers/constants";
 import * as polka from "polka";
 import { TokenManager } from "./TokenManager";
+import { apiBaseUrl } from "./helpers/constants";
 
 export const authenticate = (fn: () => void) => {
   const app = polka();
 
-  app.get(`/auth/:token`, async (req, res) => {
+  app.get("/auth/:token", async (req, res) => {
     const { token } = req.params;
     if (!token) {
-      res.end(`<h1>Something went wrong</h1>`);
+      res.end("<h1>Something went wrong</h1>");
       return;
     }
 
@@ -21,7 +21,7 @@ export const authenticate = (fn: () => void) => {
         <head>
           <style>
             body {
-              background-color: #1e1e1e;/
+              background-color: #1e1e1e;
               color: #d4d4d4;
               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
               display: flex;
@@ -49,7 +49,7 @@ export const authenticate = (fn: () => void) => {
     } else {
       vscode.commands.executeCommand(
         "vscode.open",
-        vscode.Uri.parse(`${apiBaseUrl}/auth/google`)
+        vscode.Uri.parse(`${apiBaseUrl}/auth/university`)
       );
     }
   });
