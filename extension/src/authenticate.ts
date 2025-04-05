@@ -3,47 +3,67 @@ import * as polka from "polka";
 import { TokenManager } from "./TokenManager";
 import { apiBaseUrl } from "./helpers/constants";
 
-export const authenticate = (fn: () => void) => {
+export const authenticate = (
+  fn: () => void,
+  postToWebview?: (msg: any) => void
+) => {
   const app = polka();
+  const PORT = 55331;
+  const timeoutMs = 60_000; // 60 seconds timeout
+  let isResolved = false;
 
+  const shutdown = () => {
+    if ((app as any).server) {
+      (app as any).server.close();
+    }
+  };
+
+  // Auth success route
   app.get("/auth/:token", async (req, res) => {
     const { token } = req.params;
     if (!token) {
-      res.end("<h1>Something went wrong</h1>");
+      res.end("<h1>Invalid token</h1>");
+      shutdown();
       return;
     }
 
     await TokenManager.setToken(token);
+    isResolved = true;
     fn();
 
     res.end(`
       <html>
-        <head>
-          <style>
-            body {
-              background-color: #1e1e1e;
-              color: #d4d4d4;
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              margin: 0;
-            }
-            h1 {
-              color: #569cd6;
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Auth was successful, you can close this now</h1>
+        <head><title>Auth Success</title></head>
+        <body style="background:#1e1e1e;color:white;text-align:center;padding-top:40vh;">
+          <h1 style="color:#6cf;">Auth successful! You can close this tab.</h1>
         </body>
       </html>
     `);
-    (app as any).server.close();
+
+    shutdown();
   });
 
-  app.listen(55331, (err: Error) => {
+  // Optional cancel route
+  app.get("/auth-cancel", (req, res) => {
+    res.end(`
+      <html>
+        <head><title>Auth Canceled</title></head>
+        <body style="background:#1e1e1e;color:white;text-align:center;padding-top:40vh;">
+          <h1 style="color:#f66;">Authentication canceled</h1>
+          <p style="color:#f66;">Something went wrong</p>
+        </body>
+      </html>
+    `);
+    vscode.window.showWarningMessage(
+      "Authentication was canceled by the user."
+    );
+    postToWebview?.({ type: "auth-failed" });
+    isResolved = true;
+    shutdown();
+  });
+
+  // Start local server and open auth URL
+  app.listen(PORT, (err: Error) => {
     if (err) {
       vscode.window.showErrorMessage(err.message);
     } else {
@@ -51,6 +71,16 @@ export const authenticate = (fn: () => void) => {
         "vscode.open",
         vscode.Uri.parse(`${apiBaseUrl}/auth/university`)
       );
+
+      // Timeout fallback
+      setTimeout(() => {
+        if (!isResolved) {
+          vscode.window.showErrorMessage(
+            "Authentication timed out. Please try again."
+          );
+          shutdown();
+        }
+      }, timeoutMs);
     }
   });
 };

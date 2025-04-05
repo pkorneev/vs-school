@@ -88,7 +88,10 @@ const main = async () => {
 
   app.get(
     "/auth/university/callback",
-    passport.authenticate("oauth2", { session: false }),
+    passport.authenticate("oauth2", {
+      session: false,
+      failureRedirect: "http://localhost:55331/auth-cancel",
+    }),
     (req: any, res) => {
       res.redirect(`http://localhost:55331/auth/${req.user.accessToken}`);
     }
