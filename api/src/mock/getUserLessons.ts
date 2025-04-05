@@ -2,6 +2,7 @@ export const getUserLessonsResponse = [
   {
     id: 1,
     title: "Functions",
+    deadline: "2025-04-15T23:59:00Z",
     points: 4,
     comment:
       "Good effort on this assignment. You’ve done a nice job implementing the basics, but consider optimizing your code for readability by adding more comments. \
@@ -37,6 +38,7 @@ export const getUserLessonsResponse = [
   {
     id: 2,
     title: "Data-structures",
+    deadline: "2025-04-15T23:59:00Z",
     points: 2,
     comment:
       "Good effort on this assignment. You’ve done a nice job implementing the basics, but consider optimizing your code for readability by adding more comments. \
@@ -72,6 +74,7 @@ export const getUserLessonsResponse = [
   {
     id: 3,
     title: "Pointers-and-memory",
+    deadline: "2025-01-01T23:59:00Z",
     points: null,
     comment: null,
     status: "SUBMITTED",
@@ -104,6 +107,7 @@ export const getUserLessonsResponse = [
   {
     id: 4,
     title: "Algorithms",
+    deadline: "2025-04-15T23:59:00Z",
     points: null,
     comment: null,
     status: "IN_PROGRESS",

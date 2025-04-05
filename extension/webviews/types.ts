@@ -12,6 +12,7 @@ export type File = {
 
 export type Lesson = {
   id: number;
+  deadline: "string";
   title: string;
   files: File[];
 };

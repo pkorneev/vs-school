@@ -6,10 +6,12 @@ import fetch from "node-fetch";
 import { SidebarProvider } from "./SidebarProvider";
 import { authenticate } from "./authenticate";
 import { TokenManager } from "./TokenManager";
+import { DeadlinesManager } from "./DeadlinesManager";
 import { apiBaseUrl } from "./helpers/constants";
 
 export function activate(context: vscode.ExtensionContext) {
   TokenManager.globalState = context.globalState;
+  DeadlinesManager.globalState = context.globalState;
 
   const sidebarProvider = new SidebarProvider(context.extensionUri);
 
@@ -142,6 +144,29 @@ export function activate(context: vscode.ExtensionContext) {
       };
 
       collectFiles(folderPath);
+
+      const currentDate = new Date();
+      let isLate = false;
+      const lessonsMap = DeadlinesManager.getDeadlines() || [];
+
+      const lessonId = folderPath.charAt(folderPath.length - 1);
+      const lesson = lessonsMap.find(
+        (lesson) => String(lesson.id) === lessonId
+      );
+
+      if (lesson && lesson.deadline) {
+        const deadlineDate = new Date(lesson.deadline);
+        if (currentDate > deadlineDate) {
+          isLate = true;
+        }
+      }
+
+      if (isLate) {
+        vscode.window.showErrorMessage(
+          "One or more of the assignments are past the deadline. Cannot submit."
+        );
+        return;
+      }
 
       // Send files to the server
       try {

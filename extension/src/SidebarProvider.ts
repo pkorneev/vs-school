@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { getNonce } from "./helpers/getNonce";
 import { apiBaseUrl } from "./helpers/constants";
 import { TokenManager } from "./TokenManager";
+import { DeadlinesManager } from "./DeadlinesManager";
 import { authenticate } from "./authenticate";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
@@ -41,6 +42,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         }
         case "logout": {
           TokenManager.setToken("");
+          break;
+        }
+        case "lessonsWithDeadlines": {
+          const lessonsMap = data.value.map((lesson) => {
+            return {
+              id: lesson.id,
+              deadline: lesson.deadline,
+            };
+          });
+          DeadlinesManager.setDeadlines(lessonsMap);
           break;
         }
         case "get-token": {

@@ -2,6 +2,7 @@ export const getLessonsResponse = [
   {
     id: 1,
     title: "Functions",
+    deadline: "2025-04-15T23:59:00Z",
     files: [
       {
         name: "main.c",
@@ -31,6 +32,7 @@ export const getLessonsResponse = [
   {
     id: 2,
     title: "Data-structures",
+    deadline: "2025-04-15T23:59:00Z",
     files: [
       {
         name: "main.c",
@@ -60,6 +62,7 @@ export const getLessonsResponse = [
   {
     id: 3,
     title: "Pointers-and-memory",
+    deadline: "2025-01-01T23:59:00Z",
     files: [
       {
         name: "main.c",
@@ -89,6 +92,7 @@ export const getLessonsResponse = [
   {
     id: 4,
     title: "Algorithms",
+    deadline: "2025-04-15T23:59:00Z",
     files: [
       {
         name: "main.c",
@@ -118,6 +122,7 @@ export const getLessonsResponse = [
   {
     id: 5,
     title: "Recursion",
+    deadline: "2025-04-15T23:59:00Z",
     files: [
       {
         name: "main.c",

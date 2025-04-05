@@ -32,6 +32,19 @@
     }
   });
 
+  $: {
+    const lessonsWithDeadlines = combinedLessons.map((lesson) => ({
+      id: lesson.id,
+      title: lesson.title,
+      deadline: lesson.deadline, // Include the deadline property
+    }));
+
+    tsvscode.postMessage({
+      type: "lessonsWithDeadlines",
+      value: lessonsWithDeadlines, // Send updated lessons with deadlines
+    });
+  }
+
   function toggleLesson(id: number) {
     expandedLesson = expandedLesson === id ? null : id;
   }
