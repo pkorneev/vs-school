@@ -160,6 +160,17 @@
 
               {#if expandedLesson === lesson.id}
                 <div class="lesson-details">
+                  <p class="lesson-deadline">
+                    Deadline: {new Date(lesson.deadline).toLocaleDateString(
+                      "en-US",
+                      {
+                        weekday: "long", // Show the full weekday name
+                        year: "numeric", // Show the year as a number
+                        month: "long", // Show the full month name
+                        day: "numeric", // Show the day of the month
+                      }
+                    )}
+                  </p>
                   {#if lesson.status === "COMPLETED"}
                     <p class="lesson-comment">{lesson.comment}</p>
                   {/if}
@@ -206,7 +217,8 @@
     font-size: 1.5rem;
     color: rgb(2, 209, 2);
   }
-  .lesson-comment {
+  .lesson-comment,
+  .lesson-deadline {
     margin-top: 1rem;
   }
   .status-and-chevron {
