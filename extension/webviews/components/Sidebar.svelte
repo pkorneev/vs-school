@@ -5,14 +5,6 @@
   import Login from "./Login.svelte";
   import Status from "./Status.svelte";
 
-  // !!!!!!!!!!!!!!!!! TODO !!!!!!!!!!!!!!!!!
-  // Initialize user in db with already scoped lessons from mock json( the same mock json is used for listing lessons).
-  // When user do some tasks, save his progress to those users lessons and now we can fetch base lessons and lessons scoped to user with progress.
-  // In the sidebar we can distinguish between opnening base task and task with progress
-  // As well we can submit a sollution before deadline, after deadline we will not be able to do that and would get negative response(saving also is impossible after deadline).
-  // User can open base task or his progress task(should respect deadline as well). If he opens base task and tries to safe , but has already his sollution in progress stored, inform him about it, that he can rewrite his progress and it is not
-  // want he may want to do.
-
   let loading = true;
   let user: User | null = null;
   let accessToken = "";
