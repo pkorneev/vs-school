@@ -152,30 +152,6 @@ const main = async () => {
     res.json(getLessonsResponse);
   });
 
-  app.get("/myLessons", (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      res.send({});
-      return;
-    }
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      res.send({});
-      return;
-    }
-    let userId: number | undefined;
-
-    try {
-      const payload: any = jwt.verify(token, process.env.JWT_SECRET);
-      userId = payload.userId;
-    } catch (err) {
-      res.send({});
-      return;
-    }
-
-    res.json(getUserLessonsResponse);
-  });
-
   app.post("/upload", express.json(), (req, res) => {
     console.log("Received /upload POST request with data:", req.body);
     res.status(200).send({ message: "Upload successful" });

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Lessons, User, MyLessons } from "../types";
+  import type { User, MyLessons } from "../types";
   import Footer from "./Footer.svelte";
   import Login from "./Login.svelte";
   import Status from "./Status.svelte";
@@ -8,24 +8,11 @@
   let loading = true;
   let user: User | null = null;
   let accessToken = "";
-  let lessons: Lessons = []; // Store fetched lessons
-  let myLessons: MyLessons = []; // Store fetched lessons
+  let lessons: MyLessons = []; // Store fetched lessons
   let expandedLesson: number | null = null;
 
-  // Reactive derived array
-  let combinedLessons: MyLessons = [];
-
-  $: combinedLessons = lessons.map((lesson) => {
-    const myLesson = myLessons.find((ml) => ml.id === lesson.id);
-    if (!myLesson) {
-      return { ...lesson, status: "TO_DO" };
-    } else {
-      return myLesson;
-    }
-  });
-
   $: {
-    const lessonsWithDeadlines = combinedLessons.map((lesson) => ({
+    const lessonsWithDeadlines = lessons.map((lesson) => ({
       id: lesson.id,
       title: lesson.title,
       deadline: lesson.deadline, // Include the deadline property
@@ -67,7 +54,6 @@
 
             if (user) {
               fetchAllLessons();
-              fetchMyLessons();
             }
           } catch (error) {
             console.error("Authentication failed:", error);
@@ -94,25 +80,10 @@
     }
   }
 
-  // Function to fetch lessons
-  async function fetchMyLessons() {
-    try {
-      const lessonsResponse = await fetch(`${apiBaseUrl}/myLessons`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
-      myLessons = await lessonsResponse.json();
-    } catch (error) {
-      console.error("Failed to fetch user's lessons", error);
-    }
-  }
-
   const onLogout = () => {
     accessToken = "";
     user = null;
     lessons = [];
-    myLessons = [];
     tsvscode.postMessage({ type: "logout", value: undefined });
   };
 
@@ -129,9 +100,9 @@
       <h2 class="section-title">All lessons</h2>
 
       <!-- Show fetched lessons -->
-      {#if combinedLessons.length > 0}
+      {#if lessons.length > 0}
         <ul>
-          {#each combinedLessons as lesson}
+          {#each lessons as lesson}
             <li class="lesson-elem" on:click={() => toggleLesson(lesson.id)}>
               <div class="lesson-short">
                 <div>
