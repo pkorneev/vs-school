@@ -128,7 +128,7 @@ export function activate(context: vscode.ExtensionContext) {
       const folderPath = currentWorkspaceFolder.uri.fsPath;
 
       // Collect all files in the workspace folder
-      const files: { path: string; content: string }[] = [];
+      const files: { name: string; path: string; content: string }[] = [];
       const collectFiles = (dirPath: string) => {
         const entries = fs.readdirSync(dirPath, { withFileTypes: true });
         entries.forEach((entry) => {
@@ -138,7 +138,8 @@ export function activate(context: vscode.ExtensionContext) {
           } else {
             const relativePath = path.relative(folderPath, fullPath);
             const content = fs.readFileSync(fullPath, "utf8");
-            files.push({ path: relativePath, content });
+            const name = path.basename(relativePath);
+            files.push({ name, path: relativePath, content });
           }
         });
       };
@@ -168,12 +169,25 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      // Send files to the server
+      // Send lesson data along with files to update the lesson
       try {
-        const response = await fetch(`${apiBaseUrl}/upload`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ files }),
+        const lessonData = {
+          title: lesson?.title,
+          deadline: lesson?.deadline,
+          points: lesson?.points,
+          comment: lesson?.comment,
+          status: lesson?.status,
+          files,
+        };
+        const token = TokenManager.getToken();
+        // Ensure the lesson ID is passed for the update
+        const response = await fetch(`${apiBaseUrl}/lessons/${lesson?.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(lessonData),
         });
 
         if (!response.ok) {
@@ -181,11 +195,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         vscode.window.showInformationMessage(
-          `Files from ${currentWorkspaceFolder.name} sent successfully!`
+          `Lesson with ID ${lesson?.id} updated successfully with files!`
         );
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          `Failed to send files: ${error.message}`
+          `Failed to update lesson: ${error.message}`
         );
       }
     }

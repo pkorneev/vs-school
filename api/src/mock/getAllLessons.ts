@@ -139,7 +139,7 @@ export const getLessonsResponse = [
   },
   {
     id: 5,
-    title: "Recursion",
+    title: "Recursions",
     deadline: "2025-04-15T23:59:00Z",
     points: null,
     comment: null,

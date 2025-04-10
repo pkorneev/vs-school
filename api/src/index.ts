@@ -9,8 +9,7 @@ import passport from "passport";
 import { User } from "./entities/User";
 import jwt from "jsonwebtoken";
 import cors from "cors";
-import { getLessonsResponse } from "./mock/getAllLessons";
-import { getUserLessonsResponse } from "./mock/getUserLessons";
+import { Lesson } from "./entities/Lesson";
 
 const AUTH_BASE_URL = process.env.AUTH_BASE_URL!;
 const CLIENT_ID = process.env.CLIENT_ID!;
@@ -128,28 +127,47 @@ const main = async () => {
     res.send({ user });
   });
 
-  app.get("/allLessons", (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      res.send({});
-      return;
-    }
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      res.send({});
-      return;
-    }
-    let userId: number | undefined;
+  app.get("/allLessons", async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).send({});
 
     try {
-      const payload: any = jwt.verify(token, process.env.JWT_SECRET);
-      userId = payload.userId;
+      const payload: any = jwt.verify(token, JWT_SECRET);
+      const lessons = await AppDataSource.getRepository(Lesson).find();
+      res.json(lessons);
     } catch (err) {
-      res.send({});
-      return;
+      res.status(500).send({});
     }
+  });
 
-    res.json(getLessonsResponse);
+  app.put("/lessons/:id", express.json(), async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).send({});
+
+    try {
+      const payload: any = jwt.verify(token, JWT_SECRET);
+
+      const lessonRepo = AppDataSource.getRepository(Lesson);
+      const lesson = await lessonRepo.findOne({
+        where: { id: parseInt(req.params.id) },
+      });
+
+      if (!lesson) return res.status(404).json({ message: "Lesson not found" });
+
+      // Directly update the lesson with the provided request body
+      const updatedLesson = Object.assign(lesson, req.body);
+
+      // If the deadline is provided, keep it as a string (ISO format)
+      if (updatedLesson.deadline) {
+        updatedLesson.deadline = updatedLesson.deadline;
+      }
+
+      await lessonRepo.save(updatedLesson);
+      res.json(updatedLesson);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: "Error updating lesson" });
+    }
   });
 
   app.post("/upload", express.json(), (req, res) => {
