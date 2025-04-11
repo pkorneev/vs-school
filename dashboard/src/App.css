@@ -1,0 +1,45 @@
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+header {
+  border-bottom: 1px solid var(--border-color);
+}
+.header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+.header__content--name {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+.header__content--logout {
+  font-weight: bold;
+}
+.lessons__container {
+  margin-top: var(--l);
+}
+.lesson__container {
+  margin-top: var(--l);
+  display: flex;
+  flex-direction: column;
+  gap: var(--l);
+}
+.form__lesson {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: var(--md);
+}
+.form__lesson--input {
+  width: 100%;
+}
+.form__lesson--input input,
+.form__lesson--input textarea {
+  margin-top: var(--s);
+}

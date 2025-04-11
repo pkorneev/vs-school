@@ -1,12 +1,11 @@
-import { useAtomValue, useSetAtom } from "jotai";
-import { tokenAtom, userAtom } from "../store/store";
 import { Link } from "react-router-dom";
+import Container from "../../components/Container";
+import LessonsContainer from "./LessonsContainer";
+import { useAtomValue } from "jotai";
+import { tokenAtom } from "../../store/store";
 
 const Dashboard = () => {
   const token = useAtomValue(tokenAtom);
-  const setToken = useSetAtom(tokenAtom);
-  const user = useAtomValue(userAtom);
-  const name = user?.name ?? "";
 
   if (!token) {
     return (
@@ -19,8 +18,11 @@ const Dashboard = () => {
 
   return (
     <>
-      <h2>{name}</h2>
-      <button onClick={() => setToken(null)}>Logout</button>
+      <Container>
+        <div className="lessons__container">
+          <LessonsContainer />
+        </div>
+      </Container>
     </>
   );
 };

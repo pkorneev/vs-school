@@ -4,4 +4,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  --border-color: #d9d9d9;
+  --md: 1rem;
+  --l: 2rem;
+  --s: 0.5rem;
+  --xs: 0.25rem;
 }
