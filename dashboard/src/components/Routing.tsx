@@ -12,8 +12,8 @@ const Routing = () => {
 
   return (
     <>
-      {token && <Header />}
       <BrowserRouter>
+        {token && <Header />}
         <Routes>
           <Route path="/auth/:token" element={<AuthCallback />} />
           <Route

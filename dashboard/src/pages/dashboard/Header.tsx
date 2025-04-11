@@ -5,6 +5,7 @@ import Container from "../../components/Container";
 import { LogoutOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { fetchUserData } from "../../utils/http";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const name = useAtomValue(nameAtom);
@@ -37,7 +38,9 @@ const Header = () => {
     <header>
       <Container>
         <div className="header__content">
-          <div className="header__content--name">{name}</div>
+          <Link to={"/lessons"} className="header__link">
+            <div className="header__content--name">{name}</div>
+          </Link>
           <Button onClick={handleLogout}>
             <LogoutOutlined />
             <span className="header__content--logout">Logout</span>

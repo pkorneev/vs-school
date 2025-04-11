@@ -15,7 +15,7 @@ const Lesson = () => {
   return (
     <Container>
       <div className="lesson__container">
-        <Link to={"/lessons"}>
+        <Link to={"/lessons"} style={{ width: "fit-content" }}>
           <Button>
             <ArrowLeftOutlined /> Back
           </Button>

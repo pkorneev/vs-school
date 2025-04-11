@@ -1,21 +1,34 @@
 import { useForm, Controller } from "react-hook-form";
+import { Select } from "antd";
 import { Lesson } from "../../../store/store";
-import { Button, Input } from "antd";
+import { Button, Input, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import DateTimePicker from "./DateTimePicker";
 
 type FormContainerProps = {
   lesson: Lesson;
 };
+
+const statusOptions = [
+  { value: "TO_DO", label: "To Do" },
+  { value: "IN_PROGRESS", label: "In Progress" },
+  { value: "SUBMITTED", label: "Submitted" },
+  { value: "COMPLETED", label: "Completed" },
+];
+
 const FormContainer = ({ lesson }: FormContainerProps) => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
       title: lesson.title,
       points: lesson.points,
       comment: lesson.comment,
+      status: lesson.status,
+      deadline: lesson.deadline,
     },
   });
 
@@ -37,7 +50,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
         <Controller
           name="points"
           control={control}
-          render={({ field }) => <Input {...field} />}
+          render={({ field }) => <InputNumber {...field} />}
         />
       </div>
       <div className="form__lesson--input">
@@ -48,6 +61,21 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
           render={({ field }) => (
             <TextArea {...field} autoSize={{ minRows: 3, maxRows: 5 }} />
           )}
+        />
+      </div>
+      <div className="form__lesson--input">
+        <label htmlFor="status">Status</label>
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => <Select {...field} options={statusOptions} />}
+        />
+      </div>
+      <div className="form__lesson--input">
+        <label htmlFor="deadline">Deadline</label>
+        <DateTimePicker
+          initialValue={lesson.deadline}
+          onChange={(value) => setValue("deadline", value)}
         />
       </div>
 

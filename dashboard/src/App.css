@@ -7,6 +7,10 @@
 header {
   border-bottom: 1px solid var(--border-color);
 }
+.header__link {
+  text-decoration: none;
+  color: black;
+}
 .header__content {
   display: flex;
   align-items: center;
@@ -37,9 +41,8 @@ header {
   gap: var(--md);
 }
 .form__lesson--input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s);
   width: 100%;
-}
-.form__lesson--input input,
-.form__lesson--input textarea {
-  margin-top: var(--s);
 }

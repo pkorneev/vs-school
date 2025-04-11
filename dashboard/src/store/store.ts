@@ -13,7 +13,7 @@ export type File = {
 export type Status = "TO_DO" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED";
 export type Lesson = {
   id: number;
-  deadline: "string";
+  deadline: string;
   title: string;
   files: File[];
   status?: Status;
