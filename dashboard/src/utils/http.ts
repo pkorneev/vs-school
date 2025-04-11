@@ -16,3 +16,7 @@ export const fetchUserData = async (token: string) => {
   const data = await response.json();
   return data;
 };
+
+export const handleLogin = () => {
+  window.location.href = `${API_BASE_URL}/auth/react`;
+};

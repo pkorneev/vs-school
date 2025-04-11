@@ -1,14 +1,14 @@
 import "./App.css";
 
 import { createStore, Provider } from "jotai";
-import MainPage from "./components/MainPage";
+import Routing from "./components/Routing";
 
 const myStore = createStore();
 
 function App() {
   return (
     <Provider store={myStore}>
-      <MainPage />
+      <Routing />
     </Provider>
   );
 }

@@ -92,7 +92,29 @@ const main = async () => {
       failureRedirect: "http://localhost:55331/auth-cancel",
     }),
     (req: any, res) => {
-      res.redirect(`http://localhost:55331/auth/${req.user.accessToken}`);
+      const redirectUrl = `http://localhost:55331/auth/${req.user.accessToken}`;
+      res.redirect(redirectUrl);
+    }
+  );
+
+  app.get("/auth/react", (req, res, next) => {
+    passport.authenticate("oauth2", {
+      callbackURL: "http://localhost:3003/auth/react/callback",
+      state: "react",
+      session: false,
+    })(req, res, next);
+  });
+
+  app.get(
+    "/auth/react/callback",
+    passport.authenticate("oauth2", {
+      callbackURL: "http://localhost:3003/auth/react/callback",
+      session: false,
+      failureRedirect: "http://127.0.0.1:5173/auth-cancel",
+    }),
+    (req: any, res) => {
+      const redirectUrl = `http://127.0.0.1:5173/auth/${req.user.accessToken}`;
+      res.redirect(redirectUrl);
     }
   );
 
