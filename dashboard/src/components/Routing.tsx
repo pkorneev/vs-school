@@ -1,24 +1,28 @@
 import { useAtomValue } from "jotai";
-import { userAtom } from "../store/store";
 import AuthCallback from "./AuthCallback";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Dashboard from "../pages/Dashboard";
+import { tokenAtom } from "../store/store";
 
 const Routing = () => {
-  const user = useAtomValue(userAtom);
-  const name = user?.name ?? null;
+  const token = useAtomValue(tokenAtom);
 
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/auth/:token" element={<AuthCallback />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/login"
+            element={token ? <Navigate to="/" replace /> : <LoginPage />}
+          />
+          <Route
+            path="/"
+            element={token ? <Dashboard /> : <Navigate to="/login" replace />}
+          />
         </Routes>
       </BrowserRouter>
-      {name && <h2>{name}</h2>}
     </>
   );
 };
