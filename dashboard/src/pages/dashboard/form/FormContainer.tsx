@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { Select } from "antd";
 import { Lesson } from "../../../store/store";
 import { Button, Input, InputNumber } from "antd";
@@ -25,7 +25,13 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
       comment: lesson.comment,
       status: lesson.status,
       deadline: lesson.deadline,
+      files: lesson.files,
     },
+  });
+
+  const { fields } = useFieldArray({
+    control,
+    name: "files",
   });
 
   useEffect(() => {
@@ -36,6 +42,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
         comment: lesson.comment,
         status: lesson.status,
         deadline: lesson.deadline,
+        files: lesson.files,
       });
     }
   }, [lesson, reset]);
@@ -85,7 +92,49 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
           onChange={(value) => setValue("deadline", value)}
         />
       </div>
-
+      <Button type="primary" htmlType="submit">
+        Save
+      </Button>
+      <div className="form__lesson--files">
+        {fields.map((file, index) => (
+          <div
+            key={file.id}
+            style={{
+              marginBottom: "2rem",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: "1rem",
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <div
+              style={{
+                marginBottom: "0.5rem",
+                fontWeight: "bold",
+                color: "#333",
+              }}
+            >
+              📄 {file.path}
+            </div>
+            <Controller
+              name={`files.${index}.content`}
+              control={control}
+              render={({ field }) => (
+                <TextArea
+                  {...field}
+                  autoSize={{ minRows: 5 }}
+                  style={{
+                    fontFamily: "monospace",
+                    backgroundColor: "#1e1e1e",
+                    color: "#dcdcdc",
+                    borderRadius: "6px",
+                  }}
+                />
+              )}
+            />
+          </div>
+        ))}
+      </div>
       <Button type="primary" htmlType="submit">
         Save
       </Button>

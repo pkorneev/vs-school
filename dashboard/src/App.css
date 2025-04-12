@@ -32,6 +32,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: var(--l);
+  padding-bottom: var(--l);
 }
 .form__lesson {
   display: flex;
@@ -45,4 +46,10 @@ header {
   flex-direction: column;
   gap: var(--s);
   width: 100%;
+}
+.form__lesson--files {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--md);
 }

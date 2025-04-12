@@ -7,7 +7,6 @@ type LessonsListProps = {
 };
 
 const LessonsList = ({ lessons }: LessonsListProps) => {
-  console.log(lessons);
   return (
     <List
       size="large"
