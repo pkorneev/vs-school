@@ -26,6 +26,8 @@ export const nameAtom = atom((get) => {
   return user?.name ?? null;
 });
 export const lessonsAtom = atom<Lesson[]>([]);
+export const lessonAtom = atom<Lesson | null>(null);
+export const lessonLoadingAtom = atom<boolean>(false);
 export const tokenAtom = atom<string | null>(localStorage.getItem("authToken"));
 
 export const setTokenAtom = atom(null, (get, set, newToken: string | null) => {

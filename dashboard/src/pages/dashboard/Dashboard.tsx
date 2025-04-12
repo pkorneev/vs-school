@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Container from "../../components/Container";
-import LessonsContainer from "./LessonsContainer";
+import LessonsContainer from "./lessons/LessonsContainer";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "../../store/store";
 

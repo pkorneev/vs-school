@@ -1,33 +1,17 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { nameAtom, setTokenAtom, tokenAtom, userAtom } from "../../store/store";
+import { nameAtom, setTokenAtom, userAtom } from "../../store/store";
 import { Button } from "antd";
 import Container from "../../components/Container";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
-import { fetchUserData } from "../../utils/http";
 import { Link } from "react-router-dom";
+import useFetchUser from "../../hooks/useFetchUser";
 
 const Header = () => {
   const name = useAtomValue(nameAtom);
-  const token = useAtomValue(tokenAtom);
   const setUser = useSetAtom(userAtom);
   const setToken = useSetAtom(setTokenAtom);
 
-  useEffect(() => {
-    if (token) {
-      fetchUserData(token)
-        .then((data) => {
-          if (data?.user) {
-            setUser(data.user);
-          } else {
-            console.error("No user data found");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
-  }, [token, setUser]);
+  useFetchUser();
 
   const handleLogout = () => {
     setToken(null);

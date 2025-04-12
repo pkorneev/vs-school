@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import { fetchLessons } from "../../utils/http";
-import { useAtom, useAtomValue } from "jotai";
-import { lessonsAtom, tokenAtom } from "../../store/store";
-import LessonsList from "./LessonsList";
+import { useAtom } from "jotai";
+import { lessonsAtom, tokenAtom } from "../store/store";
+import { fetchLessons } from "../utils/http";
 
-const LessonsContainer = () => {
-  const token = useAtomValue(tokenAtom);
-  const [lessons, setLessons] = useAtom(lessonsAtom);
+const useFetchLessons = () => {
+  const [token] = useAtom(tokenAtom);
+  const [, setLessons] = useAtom(lessonsAtom);
 
   useEffect(() => {
     if (token) {
@@ -23,8 +22,6 @@ const LessonsContainer = () => {
         });
     }
   }, [token, setLessons]);
-
-  return <LessonsList lessons={lessons} />;
 };
 
-export default LessonsContainer;
+export default useFetchLessons;

@@ -162,6 +162,29 @@ const main = async () => {
     }
   });
 
+  app.get("/allLessons/:id", async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).send({ error: "Unauthorized" });
+
+    try {
+      const payload: any = jwt.verify(token, JWT_SECRET);
+
+      const lessonId = req.params.id;
+      const lesson = await AppDataSource.getRepository(Lesson).findOne({
+        where: { id: lessonId },
+      });
+
+      if (!lesson) {
+        return res.status(404).send({ error: "Lesson not found" });
+      }
+
+      res.json(lesson);
+    } catch (err) {
+      console.error("Error fetching lesson:", err);
+      res.status(500).send({ error: "Internal Server Error" });
+    }
+  });
+
   app.put("/lessons/:id", express.json(), async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).send({});

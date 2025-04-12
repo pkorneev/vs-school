@@ -4,7 +4,7 @@ import LoginPage from "../pages/login/LoginPage";
 import Dashboard from "../pages/dashboard/Dashboard";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "../store/store";
-import Lesson from "../pages/dashboard/Lesson";
+import Lesson from "../pages/dashboard/lessons/Lesson";
 import Header from "../pages/dashboard/Header";
 
 const Routing = () => {

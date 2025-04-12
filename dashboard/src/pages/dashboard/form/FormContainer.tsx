@@ -4,6 +4,7 @@ import { Lesson } from "../../../store/store";
 import { Button, Input, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import DateTimePicker from "./DateTimePicker";
+import { useEffect } from "react";
 
 type FormContainerProps = {
   lesson: Lesson;
@@ -17,12 +18,7 @@ const statusOptions = [
 ];
 
 const FormContainer = ({ lesson }: FormContainerProps) => {
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
       title: lesson.title,
       points: lesson.points,
@@ -32,8 +28,19 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
     },
   });
 
+  useEffect(() => {
+    if (lesson) {
+      reset({
+        title: lesson.title,
+        points: lesson.points,
+        comment: lesson.comment,
+        status: lesson.status,
+        deadline: lesson.deadline,
+      });
+    }
+  }, [lesson, reset]);
+
   const onSubmit = (data: unknown) => console.log(data);
-  console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form__lesson">
