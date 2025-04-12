@@ -1,14 +1,27 @@
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { Select } from "antd";
-import { Lesson } from "../../../store/store";
+import { notification, Select } from "antd";
+import { File, Lesson, Status, tokenAtom } from "../../../store/store";
 import { Button, Input, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import DateTimePicker from "./DateTimePicker";
 import { useEffect } from "react";
+import { useAtomValue } from "jotai";
+import { createLesson, updateLesson } from "../../../utils/http";
 
 type FormContainerProps = {
-  lesson: Lesson;
+  lesson?: Lesson;
 };
+
+export type FormData = {
+  deadline: string;
+  title: string;
+  files: File[];
+  status?: Status;
+  points?: number;
+  comment?: string;
+};
+
+type NotificationType = "success" | "info" | "warning" | "error";
 
 const statusOptions = [
   { value: "TO_DO", label: "To Do" },
@@ -18,16 +31,38 @@ const statusOptions = [
 ];
 
 const FormContainer = ({ lesson }: FormContainerProps) => {
-  const { control, handleSubmit, setValue, reset } = useForm({
-    defaultValues: {
-      title: lesson.title,
-      points: lesson.points,
-      comment: lesson.comment,
-      status: lesson.status,
-      deadline: lesson.deadline,
-      files: lesson.files,
-    },
+  const [api, contextHolder] = notification.useNotification();
+  const token = useAtomValue(tokenAtom);
+  const { control, handleSubmit, setValue, reset } = useForm<FormData>({
+    defaultValues: lesson
+      ? {
+          title: lesson.title,
+          points: lesson.points,
+          comment: lesson.comment,
+          status: lesson.status,
+          deadline: lesson.deadline,
+          files: lesson.files,
+        }
+      : {
+          title: "",
+          points: undefined,
+          comment: "",
+          status: undefined,
+          deadline: "",
+          files: [],
+        },
   });
+
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    description: string
+  ) => {
+    api[type]({
+      message: "Notification Title",
+      duration: 2.5,
+      description: description,
+    });
+  };
 
   const { fields } = useFieldArray({
     control,
@@ -47,16 +82,61 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
     }
   }, [lesson, reset]);
 
-  const onSubmit = (data: unknown) => console.log(data);
+  const onSubmit = (formData: FormData) => {
+    if (!token) return;
+
+    if (lesson) {
+      const mergedLesson = {
+        ...lesson,
+        ...formData,
+        files: formData.files,
+      };
+
+      updateLesson(lesson.id, mergedLesson, token)
+        .then((res) => {
+          openNotificationWithIcon(
+            "success",
+            "You have successfully updated lesson!"
+          );
+          console.log("Lesson updated:", res);
+        })
+        .catch((err) => {
+          openNotificationWithIcon("error", "Error while updating lesson!");
+          console.error("Update error:", err);
+        });
+    } else {
+      createLesson(formData, token)
+        .then((res) => {
+          openNotificationWithIcon(
+            "success",
+            "You have successfully created lesson!"
+          );
+          console.log("Lesson created:", res);
+        })
+        .catch((err) => {
+          openNotificationWithIcon("error", "Error while creating lesson!");
+          console.error("Create error:", err);
+        });
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form__lesson">
+      {contextHolder}
       <div className="form__lesson--input">
         <label htmlFor="title">Title</label>
         <Controller
           name="title"
           control={control}
-          render={({ field }) => <Input {...field} />}
+          rules={{ required: "Title is required" }}
+          render={({ field, fieldState }) => (
+            <>
+              <Input {...field} />
+              {fieldState?.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
         />
       </div>
       <div className="form__lesson--input">
@@ -82,13 +162,21 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
         <Controller
           name="status"
           control={control}
-          render={({ field }) => <Select {...field} options={statusOptions} />}
+          rules={{ required: "Status is required" }}
+          render={({ field, fieldState }) => (
+            <>
+              <Select {...field} options={statusOptions} />
+              {fieldState?.error && (
+                <span style={{ color: "red" }}>{fieldState.error.message}</span>
+              )}
+            </>
+          )}
         />
       </div>
       <div className="form__lesson--input">
         <label htmlFor="deadline">Deadline</label>
         <DateTimePicker
-          initialValue={lesson.deadline}
+          initialValue={lesson?.deadline ?? new Date().toISOString()}
           onChange={(value) => setValue("deadline", value)}
         />
       </div>

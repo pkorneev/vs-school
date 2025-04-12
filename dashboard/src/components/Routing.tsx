@@ -6,6 +6,7 @@ import { useAtomValue } from "jotai";
 import { tokenAtom } from "../store/store";
 import Lesson from "../pages/dashboard/lessons/Lesson";
 import Header from "../pages/dashboard/Header";
+import NewLesson from "../pages/dashboard/lessons/NewLesson";
 
 const Routing = () => {
   const token = useAtomValue(tokenAtom);
@@ -27,6 +28,10 @@ const Routing = () => {
           <Route
             path="/lessons/:id"
             element={token ? <Lesson /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/create"
+            element={token ? <NewLesson /> : <Navigate to="/login" replace />}
           />
           <Route
             path="/"

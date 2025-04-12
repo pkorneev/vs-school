@@ -17,6 +17,10 @@ header {
   justify-content: space-between;
   padding: 1rem;
 }
+.header__content--buttons {
+  display: flex;
+  gap: var(--md);
+}
 .header__content--name {
   font-weight: bold;
   font-size: 1.25rem;

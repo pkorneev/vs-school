@@ -215,9 +215,28 @@ const main = async () => {
     }
   });
 
-  app.post("/upload", express.json(), (req, res) => {
-    console.log("Received /upload POST request with data:", req.body);
-    res.status(200).send({ message: "Upload successful" });
+  app.post("/lessons", express.json(), async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).send({});
+
+    try {
+      const payload: any = jwt.verify(token, JWT_SECRET);
+
+      const lessonRepo = AppDataSource.getRepository(Lesson);
+
+      // Create new lesson instance
+      const newLesson = lessonRepo.create({
+        ...req.body,
+        userId: payload.userId,
+      });
+
+      const savedLesson = await lessonRepo.save(newLesson);
+
+      res.status(201).json(savedLesson);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: "Error creating lesson" });
+    }
   });
 
   app.get("/", (_req, res) => {
