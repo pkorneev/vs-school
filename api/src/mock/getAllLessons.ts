@@ -12,7 +12,7 @@ export const getLessonsResponse = [
     files: [
       {
         name: "main.c",
-        path: "hello.c",
+        path: "main.c",
         content:
           '#include <stdio.h>\nint main() { printf("FIRST LESSON!"); return 0; }',
       },
@@ -48,7 +48,7 @@ export const getLessonsResponse = [
     files: [
       {
         name: "main.c",
-        path: "hello.c",
+        path: "main.c",
         content:
           '#include <stdio.h>\nint main() { printf("SECOND LESSON!"); return 0; }',
       },
@@ -81,7 +81,7 @@ export const getLessonsResponse = [
     files: [
       {
         name: "main.c",
-        path: "hello.c",
+        path: "main.c",
         content:
           '#include <stdio.h>\nint main() { printf("SECOND LESSON!"); return 0; }',
       },
@@ -114,7 +114,7 @@ export const getLessonsResponse = [
     files: [
       {
         name: "main.c",
-        path: "hello.c",
+        path: "main.c",
         content:
           '#include <stdio.h>\nint main() { printf("SECOND LESSON!"); return 0; }',
       },
@@ -147,7 +147,7 @@ export const getLessonsResponse = [
     files: [
       {
         name: "main.c",
-        path: "hello.c",
+        path: "main.c",
         content:
           '#include <stdio.h>\nint main() { printf("FOURTH LESSON!"); return 0; }',
       },

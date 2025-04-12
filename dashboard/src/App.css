@@ -38,12 +38,29 @@ header {
   gap: var(--l);
   padding-bottom: var(--l);
 }
+.file__element--content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--md);
+}
+.file__element--content button {
+  width: fit-content;
+  align-self: flex-end;
+}
 .form__lesson {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
   gap: var(--md);
+}
+.form__lesson button {
+  width: fit-content;
+}
+.form__lesson--save {
+  align-self: flex-end;
+}
+.form__lesson--add {
+  align-self: center;
 }
 .form__lesson--input {
   display: flex;

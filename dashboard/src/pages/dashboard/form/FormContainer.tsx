@@ -7,6 +7,7 @@ import DateTimePicker from "./DateTimePicker";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { createLesson, updateLesson } from "../../../utils/http";
+import { PlusOutlined } from "@ant-design/icons";
 
 type FormContainerProps = {
   lesson?: Lesson;
@@ -49,7 +50,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
           comment: "",
           status: undefined,
           deadline: "",
-          files: [],
+          files: [{ path: "", name: "", content: "" }], // Initialize an empty file if no lesson exists
         },
   });
 
@@ -64,7 +65,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
     });
   };
 
-  const { fields } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "files",
   });
@@ -96,7 +97,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
         .then((res) => {
           openNotificationWithIcon(
             "success",
-            "You have successfully updated lesson!"
+            "You have successfully updated the lesson!"
           );
           console.log("Lesson updated:", res);
         })
@@ -109,7 +110,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
         .then((res) => {
           openNotificationWithIcon(
             "success",
-            "You have successfully created lesson!"
+            "You have successfully created a lesson!"
           );
           console.log("Lesson created:", res);
         })
@@ -180,13 +181,11 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
           onChange={(value) => setValue("deadline", value)}
         />
       </div>
-      <Button type="primary" htmlType="submit">
-        Save
-      </Button>
       <div className="form__lesson--files">
         {fields.map((file, index) => (
           <div
             key={file.id}
+            className="file__element--content"
             style={{
               marginBottom: "2rem",
               border: "1px solid #ccc",
@@ -202,8 +201,22 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
                 color: "#333",
               }}
             >
-              📄 {file.path}
+              📄 {file.name}
             </div>
+            <Controller
+              name={`files.${index}.name`}
+              control={control}
+              render={({ field }) => (
+                <Input {...field} placeholder="File name" />
+              )}
+            />
+            <Controller
+              name={`files.${index}.path`}
+              control={control}
+              render={({ field }) => (
+                <Input {...field} placeholder="File path" />
+              )}
+            />
             <Controller
               name={`files.${index}.content`}
               control={control}
@@ -220,10 +233,32 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
                 />
               )}
             />
+            <Button
+              color="danger"
+              variant="solid"
+              onClick={() => remove(index)}
+            >
+              Remove File
+            </Button>
           </div>
         ))}
       </div>
-      <Button type="primary" htmlType="submit">
+      {!lesson && (
+        <Button
+          onClick={() =>
+            append({
+              path: "",
+              name: "",
+              content: "",
+            })
+          }
+          className="form__lesson--add"
+        >
+          <PlusOutlined />
+          Add File
+        </Button>
+      )}
+      <Button type="primary" htmlType="submit" className="form__lesson--save">
         Save
       </Button>
     </form>
