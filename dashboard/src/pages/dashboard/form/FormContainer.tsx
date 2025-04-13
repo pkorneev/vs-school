@@ -14,9 +14,11 @@ import { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { createLesson, updateLesson } from "../../../utils/http";
 import { PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 type FormContainerProps = {
   lesson?: Lesson;
+  refetchLesson?: () => void;
 };
 
 export type FormData = {
@@ -35,9 +37,10 @@ const statusOptions = [
   { value: "COMPLETED", label: "Completed" },
 ];
 
-const FormContainer = ({ lesson }: FormContainerProps) => {
+const FormContainer = ({ lesson, refetchLesson }: FormContainerProps) => {
   const token = useAtomValue(tokenAtom);
   const notify = useSetAtom(notifyAtom);
+  const navigate = useNavigate();
   const { control, handleSubmit, setValue, reset } = useForm<FormData>({
     defaultValues: lesson
       ? {
@@ -93,6 +96,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
             description: "You have successfully updated the lesson!",
           });
           console.log("Lesson updated:", res);
+          refetchLesson?.();
         })
         .catch((err) => {
           notify({
@@ -109,6 +113,7 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
             description: "You have successfully created the lesson!",
           });
           console.log("Lesson created:", res);
+          navigate("/lessons");
         })
         .catch((err) => {
           notify({

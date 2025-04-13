@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useAtom } from "jotai";
 import { lessonAtom, lessonLoadingAtom, tokenAtom } from "../store/store";
 import { fetchLessonById } from "../utils/http";
@@ -10,7 +10,7 @@ const useFetchLesson = () => {
   const [token] = useAtom(tokenAtom);
   const [, setLoading] = useAtom(lessonLoadingAtom);
 
-  useEffect(() => {
+  const refetch = useCallback(() => {
     if (token && id) {
       setLoading(true);
       fetchLessonById(id, token)
@@ -28,7 +28,13 @@ const useFetchLesson = () => {
           setLoading(false);
         });
     }
-  }, [id, token, setLesson, setLoading]);
+  }, [token, id, setLesson, setLoading]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  return refetch;
 };
 
 export default useFetchLesson;

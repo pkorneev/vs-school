@@ -11,7 +11,7 @@ import { lessonAtom, lessonLoadingAtom } from "../../../store/store";
 const Lesson = () => {
   const lesson = useAtomValue(lessonAtom);
   const isLoading = useAtomValue(lessonLoadingAtom);
-  useFetchLesson();
+  const refetch = useFetchLesson();
 
   if (isLoading || !lesson) {
     return (
@@ -36,7 +36,7 @@ const Lesson = () => {
             <ArrowLeftOutlined /> Back
           </Button>
         </Link>
-        <FormContainer lesson={lesson} />
+        <FormContainer lesson={lesson} refetchLesson={refetch} />
       </div>
     </Container>
   );

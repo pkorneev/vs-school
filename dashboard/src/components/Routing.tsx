@@ -4,9 +4,9 @@ import LoginPage from "../pages/login/LoginPage";
 import Dashboard from "../pages/dashboard/Dashboard";
 import { useAtomValue, useSetAtom } from "jotai";
 import { notificationApiAtom, tokenAtom } from "../store/store";
-import Lesson from "../pages/dashboard/lessons/Lesson";
+import Lesson from "../pages/dashboard/lesson/Lesson";
 import Header from "../pages/dashboard/Header";
-import NewLesson from "../pages/dashboard/lessons/NewLesson";
+import NewLesson from "../pages/dashboard/lesson/NewLesson";
 import { notification } from "antd";
 import { useEffect } from "react";
 
