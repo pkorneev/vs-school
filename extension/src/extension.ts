@@ -135,17 +135,38 @@ export function activate(context: vscode.ExtensionContext) {
 
       // Collect all files in the workspace folder
       const files: { name: string; path: string; content: string }[] = [];
+      const isUtf8 = (buffer: Buffer) => {
+        try {
+          const content = buffer.toString("utf8");
+          return !content.includes("\uFFFD");
+        } catch {
+          return false;
+        }
+      };
+
       const collectFiles = (dirPath: string) => {
         const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+
         entries.forEach((entry) => {
           const fullPath = path.join(dirPath, entry.name);
+
           if (entry.isDirectory()) {
             collectFiles(fullPath);
           } else {
-            const relativePath = path.relative(folderPath, fullPath);
-            const content = fs.readFileSync(fullPath, "utf8");
-            const name = path.basename(relativePath);
-            files.push({ name, path: relativePath, content });
+            try {
+              const rawBuffer = fs.readFileSync(fullPath);
+              if (!isUtf8(rawBuffer)) {
+                console.warn(`Skipping non-UTF8 file: ${fullPath}`);
+                return;
+              }
+
+              const relativePath = path.relative(folderPath, fullPath);
+              const content = rawBuffer.toString("utf8");
+              const name = path.basename(relativePath);
+              files.push({ name, path: relativePath, content });
+            } catch (err) {
+              console.warn(`Failed reading file ${fullPath}: ${err.message}`);
+            }
           }
         });
       };
