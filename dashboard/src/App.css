@@ -28,6 +28,9 @@ header {
 .header__content--logout {
   font-weight: bold;
 }
+.dashboard__container {
+  margin-top: var(--l);
+}
 .lessons__container {
   margin-top: var(--l);
 }
@@ -78,4 +81,9 @@ header {
   display: flex;
   flex-direction: column;
   gap: var(--md);
+}
+.page__header {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
 }

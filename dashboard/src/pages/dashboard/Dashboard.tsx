@@ -19,7 +19,7 @@ const Dashboard = () => {
   return (
     <>
       <Container>
-        <div className="lessons__container">
+        <div className="dashboard__container">
           <LessonsContainer />
         </div>
       </Container>

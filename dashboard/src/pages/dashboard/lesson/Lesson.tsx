@@ -13,6 +13,7 @@ import {
   tokenAtom,
 } from "../../../store/store";
 import { deleteLesson } from "../../../utils/http";
+import H1 from "../../../components/H1";
 
 const Lesson = () => {
   const { id } = useParams();
@@ -61,6 +62,7 @@ const Lesson = () => {
   return (
     <Container>
       <div className="lesson__container">
+        <H1>Edit lesson</H1>
         <div className="lesson__container--buttons">
           <Link to={"/lessons"} style={{ width: "fit-content" }}>
             <Button>
