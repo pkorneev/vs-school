@@ -239,6 +239,29 @@ const main = async () => {
     }
   });
 
+  app.delete("/lessons/:id", async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).send({ error: "Unauthorized" });
+
+    try {
+      const payload: any = jwt.verify(token, JWT_SECRET);
+
+      const lessonRepo = AppDataSource.getRepository(Lesson);
+      const lessonId = parseInt(req.params.id);
+
+      const lesson = await lessonRepo.findOne({ where: { id: lessonId } });
+      if (!lesson) {
+        return res.status(404).send({ error: "Lesson not found" });
+      }
+
+      await lessonRepo.remove(lesson);
+      res.status(200).send({ message: "Lesson deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting lesson:", err);
+      res.status(500).send({ error: "Internal Server Error" });
+    }
+  });
+
   app.get("/", (_req, res) => {
     res.send("localhost:3003 backend");
   });

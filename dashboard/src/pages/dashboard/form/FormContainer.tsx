@@ -262,7 +262,7 @@ const FormContainer = ({ lesson, refetchLesson }: FormContainerProps) => {
         </Button>
       )}
       <Button type="primary" htmlType="submit" className="form__lesson--save">
-        Save
+        {lesson ? "Save" : "Create"}
       </Button>
     </form>
   );

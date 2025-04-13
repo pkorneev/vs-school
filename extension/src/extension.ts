@@ -54,7 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
     "vs-school.createFiles",
     async (lessonFiles) => {
       // Create a temporary directory
-      const tmpDir = path.join(os.tmpdir(), `lesson-${lessonFiles.id}`);
+      const tmpDir = path.join(
+        os.tmpdir(),
+        `${lessonFiles.title}-${lessonFiles.id}`
+      );
       if (!fs.existsSync(tmpDir)) {
         fs.mkdirSync(tmpDir, { recursive: true });
       }
@@ -79,7 +82,10 @@ export function activate(context: vscode.ExtensionContext) {
           ? vscode.workspace.workspaceFolders.length
           : 0,
         null,
-        { uri: vscode.Uri.file(tmpDir), name: `Lesson-${lessonFiles.id}` }
+        {
+          uri: vscode.Uri.file(tmpDir),
+          name: `${lessonFiles.title}-${lessonFiles.id}`,
+        }
       );
 
       // Open the first file in the editor
@@ -150,7 +156,7 @@ export function activate(context: vscode.ExtensionContext) {
       let isLate = false;
       const lessonsMap = DeadlinesManager.getDeadlines() || [];
 
-      const lessonId = folderPath.charAt(folderPath.length - 1);
+      const lessonId = folderPath.split("-").pop();
       const lesson = lessonsMap.find(
         (lesson) => String(lesson.id) === lessonId
       );

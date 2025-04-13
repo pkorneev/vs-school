@@ -1,5 +1,5 @@
 import "./App.css";
-
+import "antd/dist/reset.css";
 import { createStore, Provider } from "jotai";
 import Routing from "./components/Routing";
 

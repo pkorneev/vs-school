@@ -86,6 +86,21 @@ export const createLesson = async (formData: FormData, token: string) => {
   return res.json();
 };
 
+export const deleteLesson = async (id: number, token: string) => {
+  const res = await fetch(`${API_BASE_URL}/lessons/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to delete lesson");
+  }
+
+  return res.json();
+};
+
 export const handleLogin = () => {
   window.location.href = `${API_BASE_URL}/auth/react`;
 };

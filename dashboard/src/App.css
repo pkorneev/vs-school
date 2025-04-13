@@ -38,6 +38,11 @@ header {
   gap: var(--l);
   padding-bottom: var(--l);
 }
+.lesson__container--buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 .file__element--content {
   display: flex;
   flex-direction: column;
