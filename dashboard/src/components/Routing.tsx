@@ -2,18 +2,27 @@ import AuthCallback from "./AuthCallback";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "../pages/login/LoginPage";
 import Dashboard from "../pages/dashboard/Dashboard";
-import { useAtomValue } from "jotai";
-import { tokenAtom } from "../store/store";
+import { useAtomValue, useSetAtom } from "jotai";
+import { notificationApiAtom, tokenAtom } from "../store/store";
 import Lesson from "../pages/dashboard/lessons/Lesson";
 import Header from "../pages/dashboard/Header";
 import NewLesson from "../pages/dashboard/lessons/NewLesson";
+import { notification } from "antd";
+import { useEffect } from "react";
 
 const Routing = () => {
   const token = useAtomValue(tokenAtom);
+  const [api, contextHolder] = notification.useNotification();
+  const setNotificationApi = useSetAtom(notificationApiAtom);
+
+  useEffect(() => {
+    setNotificationApi(api);
+  }, [api, setNotificationApi]);
 
   return (
     <>
       <BrowserRouter>
+        {contextHolder}
         {token && <Header />}
         <Routes>
           <Route path="/auth/:token" element={<AuthCallback />} />

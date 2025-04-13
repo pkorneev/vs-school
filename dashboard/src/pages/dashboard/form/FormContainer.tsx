@@ -1,11 +1,17 @@
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { notification, Select } from "antd";
-import { File, Lesson, Status, tokenAtom } from "../../../store/store";
+import { Select } from "antd";
+import {
+  File,
+  Lesson,
+  notifyAtom,
+  Status,
+  tokenAtom,
+} from "../../../store/store";
 import { Button, Input, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import DateTimePicker from "./DateTimePicker";
 import { useEffect } from "react";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { createLesson, updateLesson } from "../../../utils/http";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -22,8 +28,6 @@ export type FormData = {
   comment?: string;
 };
 
-type NotificationType = "success" | "info" | "warning" | "error";
-
 const statusOptions = [
   { value: "TO_DO", label: "To Do" },
   { value: "IN_PROGRESS", label: "In Progress" },
@@ -32,8 +36,8 @@ const statusOptions = [
 ];
 
 const FormContainer = ({ lesson }: FormContainerProps) => {
-  const [api, contextHolder] = notification.useNotification();
   const token = useAtomValue(tokenAtom);
+  const notify = useSetAtom(notifyAtom);
   const { control, handleSubmit, setValue, reset } = useForm<FormData>({
     defaultValues: lesson
       ? {
@@ -53,17 +57,6 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
           files: [{ path: "", name: "", content: "" }], // Initialize an empty file if no lesson exists
         },
   });
-
-  const openNotificationWithIcon = (
-    type: NotificationType,
-    description: string
-  ) => {
-    api[type]({
-      message: "Notification Title",
-      duration: 2.5,
-      description: description,
-    });
-  };
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -95,27 +88,33 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
 
       updateLesson(lesson.id, mergedLesson, token)
         .then((res) => {
-          openNotificationWithIcon(
-            "success",
-            "You have successfully updated the lesson!"
-          );
+          notify({
+            type: "success",
+            description: "You have successfully updated the lesson!",
+          });
           console.log("Lesson updated:", res);
         })
         .catch((err) => {
-          openNotificationWithIcon("error", "Error while updating lesson!");
+          notify({
+            type: "error",
+            description: "Error while updating lesson!",
+          });
           console.error("Update error:", err);
         });
     } else {
       createLesson(formData, token)
         .then((res) => {
-          openNotificationWithIcon(
-            "success",
-            "You have successfully created a lesson!"
-          );
+          notify({
+            type: "success",
+            description: "You have successfully created the lesson!",
+          });
           console.log("Lesson created:", res);
         })
         .catch((err) => {
-          openNotificationWithIcon("error", "Error while creating lesson!");
+          notify({
+            type: "error",
+            description: "Error while creating lesson!",
+          });
           console.error("Create error:", err);
         });
     }
@@ -123,7 +122,6 @@ const FormContainer = ({ lesson }: FormContainerProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form__lesson">
-      {contextHolder}
       <div className="form__lesson--input">
         <label htmlFor="title">Title</label>
         <Controller

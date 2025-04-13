@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { notification } from "antd";
 
 export type User = {
   id: number;
@@ -38,3 +39,27 @@ export const setTokenAtom = atom(null, (get, set, newToken: string | null) => {
     localStorage.removeItem("authToken");
   }
 });
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+export const notificationApiAtom = atom<
+  ReturnType<typeof notification.useNotification>[0] | null
+>(null);
+
+export const notifyAtom = atom(
+  null,
+  (
+    get,
+    _set,
+    { type, description }: { type: NotificationType; description: string }
+  ) => {
+    const api = get(notificationApiAtom);
+    if (api) {
+      api[type]({
+        message: "Notification Title",
+        duration: 2.5,
+        description,
+      });
+    }
+  }
+);
