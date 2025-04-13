@@ -31,7 +31,7 @@ export const lessonAtom = atom<Lesson | null>(null);
 export const lessonLoadingAtom = atom<boolean>(false);
 export const tokenAtom = atom<string | null>(localStorage.getItem("authToken"));
 
-export const setTokenAtom = atom(null, (get, set, newToken: string | null) => {
+export const setTokenAtom = atom(null, (_get, set, newToken: string | null) => {
   set(tokenAtom, newToken);
   if (newToken) {
     localStorage.setItem("authToken", newToken);
