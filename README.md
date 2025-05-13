@@ -2,9 +2,8 @@
 
 VS-School is a bachelor's thesis project consisting of a VS Code extension built using modern web technologies.
 
-## Technologies Used
+## Project structure
 
-- **VS Code Extension API**
-- **Express.js** for mockup API
-- **TypeScript**
-- **Svelte** for webviews
+- **api** is an interactive backend for VS Code extesnion
+- **dashboard** is a react application for managing backend data
+- **extension** is VS Code extension
