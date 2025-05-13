@@ -27,7 +27,7 @@ This is the backend server for the **vs-school** platform. It’s built with **N
 
 ---
 
-## 🛠 Database Setup
+## Database Setup
 
 You need to have **PostgreSQL** installed and running locally.
 
